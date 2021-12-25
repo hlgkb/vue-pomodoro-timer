@@ -28,7 +28,9 @@
       </TimerButton>
     </div>
     <div class="timer__session-controls">
-      <SessionControls v-model="breakLength" />
+      <SessionControls v-model="breakLength">
+        Break Length
+      </SessionControls>
       <SessionControls v-model="sessionLength">
         Session Length
       </SessionControls>
