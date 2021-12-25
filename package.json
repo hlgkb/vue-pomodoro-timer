@@ -35,7 +35,7 @@
     "eslint-plugin-vue": "^8.2.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.2",
-    "node-sass": "^7.0.0",
-    "sass-loader": "^12.4.0"
+    "node-sass": "^6.0.0",
+    "sass-loader": "^10.0.3"
   }
 }
