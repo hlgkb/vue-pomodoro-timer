@@ -28,7 +28,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
-    '@nuxtjs/google-fonts'
+    '@nuxtjs/google-fonts',
+    'nuxt-vite'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -54,5 +55,10 @@ export default {
       Montserrat: true,
       Quicksand: true
     }
+  },
+
+  // Vite setup
+  vite: {
+    build: true
   }
 }
