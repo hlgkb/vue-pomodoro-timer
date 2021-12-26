@@ -55,8 +55,8 @@ export default Vue.extend({
   },
   data () {
     return {
-      breakLength: 1,
-      sessionLength: 1,
+      breakLength: 5,
+      sessionLength: 25,
       stage: 'Session',
       termRunning: false,
       isRunning: false,
