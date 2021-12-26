@@ -4,7 +4,7 @@
       <slot />
     </span>
     <div class="duration__controls">
-      <TimerButton variant="control" @click.native="adjust(false)">
+      <TimerButton variant="control" :disabled="minusDisabled" @click.native="adjust(false)">
         <svg role="img" viewBox="0 0 448 512">
           <path
             fill="currentColor"
@@ -15,7 +15,7 @@
       <p class="duration__length">
         {{ value }}
       </p>
-      <TimerButton variant="control" @click.native="adjust">
+      <TimerButton variant="control" :disabled="plusDisabled" @click.native="adjust">
         <svg role="img" viewBox="0 0 448 512">
           <path
             fill="currentColor"
@@ -41,6 +41,14 @@ export default Vue.extend({
     return {
       min: 1,
       max: 60
+    }
+  },
+  computed: {
+    plusDisabled () {
+      return (this.$attrs.disabled) || this.value === 60
+    },
+    minusDisabled () {
+      return (this.$attrs.disabled) || this.value === 1
     }
   },
   methods: {

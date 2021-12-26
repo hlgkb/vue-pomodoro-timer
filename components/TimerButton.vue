@@ -56,6 +56,7 @@ export default Vue.extend({
 
   &--control {
     &:disabled {
+      color: grey;
       box-shadow: none;
     }
   }
