@@ -4,7 +4,7 @@
       <slot />
     </span>
     <div class="duration__controls">
-      <TimerButton variant="control" :disabled="minusDisabled" @click.native="adjust(false)">
+      <TimerButton variant="control" aria-label="Decrease Length" :disabled="minusDisabled" @click.native="adjust(false)">
         <svg role="img" viewBox="0 0 448 512">
           <path
             fill="currentColor"
@@ -15,7 +15,7 @@
       <p class="duration__length">
         {{ value }}
       </p>
-      <TimerButton variant="control" :disabled="plusDisabled" @click.native="adjust">
+      <TimerButton variant="control" aria-label="Increase Length" :disabled="plusDisabled" @click.native="adjust">
         <svg role="img" viewBox="0 0 448 512">
           <path
             fill="currentColor"
