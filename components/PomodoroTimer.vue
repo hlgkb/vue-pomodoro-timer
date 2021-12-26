@@ -1,24 +1,27 @@
 <template>
   <div class="timer">
     <h2 class="timer__title">
-      Vue Pomodoro Timer
+      {{ projectTitle }}
     </h2>
     <h3 class="timer__label">
-      Session
+      {{ stage }}
     </h3>
     <h1 class="timer__time">
-      25:00
+      {{ timerString }}
     </h1>
     <div class="timer__controls">
-      <TimerButton variant="large">
-        <svg role="img" viewBox="0 0 448 512">
+      <TimerButton variant="large" @click.native="start">
+        <svg v-if="termRunning === false" role="img" viewBox="0 0 448 512">
           <path
             fill="currentColor"
             d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"
           />
         </svg>
+        <svg v-else role="img" viewBox="0 0 448 512">
+          <path fill="currentColor" d="M144 479H48c-26.5 0-48-21.5-48-48V79c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48zm304-48V79c0-26.5-21.5-48-48-48h-96c-26.5 0-48 21.5-48 48v352c0 26.5 21.5 48 48 48h96c26.5 0 48-21.5 48-48z" />
+        </svg>
       </TimerButton>
-      <TimerButton variant="large">
+      <TimerButton variant="large" @click.native="reset">
         <svg role="img" viewBox="0 0 512 512">
           <path
             fill="currentColor"
@@ -26,12 +29,13 @@
           />
         </svg>
       </TimerButton>
+      <audio ref="notification" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto" />
     </div>
     <div class="timer__session-controls">
-      <SessionControls v-model="breakLength">
+      <SessionControls v-model="breakLength" :disabled="termRunning">
         Break Length
       </SessionControls>
-      <SessionControls v-model="sessionLength">
+      <SessionControls v-model="sessionLength" :disabled="termRunning">
         Session Length
       </SessionControls>
     </div>
@@ -39,12 +43,128 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
+import { Timer } from '@/utils/Timer'
+import { calculateValue } from '@/utils/utils'
 export default Vue.extend({
   name: 'PomodoroTimer',
+  props: {
+    projectTitle: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
-      breakLength: 5,
-      sessionLength: 25
+      breakLength: 1,
+      sessionLength: 1,
+      stage: 'Session',
+      termRunning: false,
+      isRunning: false,
+      isPaused: false,
+      timer: new Timer(0),
+      timerString: '25:00'
+    }
+  },
+  head () {
+    const data = this.$data
+    return {
+      title: (data.termRunning) ? `[${data.stage}] - ${data.timerString}` : this.projectTitle
+    }
+  },
+  computed: {
+    notification () {
+      return this.$refs.notification as HTMLAudioElement
+    }
+  },
+  watch: {
+    sessionLength: {
+      handler (length:number) {
+        if (this.stage.toLowerCase() === 'session') {
+          this.handleChangeOnPause(length)
+        }
+      },
+      immediate: true
+    },
+    breakLength: {
+      handler (length:number) {
+        if (this.stage.toLowerCase() === 'break') {
+          this.handleChangeOnPause(length)
+        }
+      },
+      immediate: true
+    }
+  },
+  mounted () {
+    this.setUpTimerEvents()
+  },
+  beforeDestroy () {
+    this.timer.removeAllEvents()
+  },
+  methods: {
+    setUpTimerEvents () {
+      this.timer.on('started', this.handleStart)
+      this.timer.on('update', this.handleUpdate)
+      this.timer.on('paused', this.handlePaused)
+      this.timer.on('completed', this.handleCompleted)
+      this.timer.on('stopped', this.handleStopped)
+    },
+    handleChangeOnPause (length:number) {
+      this.timerString = calculateValue(length * 60)
+      if (this.isPaused) {
+        this.timer.setTarget(length)
+      }
+    },
+    handleCompleted () {
+      if (this.stage.toLowerCase() === 'session') {
+        this.stage = 'Break'
+        this.timer.setTarget(this.breakLength)
+      } else {
+        this.stage = 'Session'
+        this.timer.setTarget(this.sessionLength)
+      }
+      if (this.notification) {
+        this.notification.play()
+      }
+      this.timer.start()
+    },
+    handleStart () {
+      this.isPaused = false
+      this.isRunning = true
+    },
+    handleUpdate (value:string) {
+      this.timerString = value
+    },
+    handlePaused () {
+      this.isRunning = false
+      this.isPaused = true
+      this.termRunning = false
+    },
+    handleStopped () {
+      this.resetDatas()
+    },
+    resetDatas () {
+      this.breakLength = 5
+      this.sessionLength = 25
+      this.stage = 'session'
+      this.termRunning = false
+      this.isRunning = false
+      this.timerString = calculateValue(this.sessionLength * 60)
+    },
+    reset () {
+      this.timer.stop()
+    },
+    start () {
+      if (this.termRunning === true) {
+        this.timer.pause()
+      } else if (this.isPaused === true) {
+        this.timer.start()
+        this.termRunning = true
+      } else {
+        this.timer = new Timer(this.sessionLength)
+        this.setUpTimerEvents()
+        this.timer.start()
+        this.termRunning = true
+      }
     }
   }
 })
@@ -79,6 +199,7 @@ export default Vue.extend({
     font-weight: 500;
     font-size: 20px;
     margin-bottom: 15px;
+    text-transform: capitalize;
   }
 
   &__time {

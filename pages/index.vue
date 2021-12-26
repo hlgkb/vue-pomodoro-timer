@@ -1,5 +1,5 @@
 <template>
-  <PomodoroTimer />
+  <PomodoroTimer project-title="Vue Pomodoro Timer" />
 </template>
 
 <script lang="ts">
