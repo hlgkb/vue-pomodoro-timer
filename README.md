@@ -1,4 +1,18 @@
-# vue-pomodoro-timer
+![Image of Vue Pomodoro Timer](https://i.postimg.cc/wTmK33sw/screenshot-vue-pomodoro-timer-vercel-app-2021-12-27-10-45-22.png)
+# 🍅 Vue Pomodoro Timer
+> This is a very small project created with the purpose of replicating [React Pomodoro Timer](https://github.com/Th3Wall/react-pomodoro-clock) in Nuxt.js.
+
+## :rocket: Technologies ##
+
+- [Nuxt](https://nuxtjs.org/)
+- [vue-meta](https://vue-meta.nuxtjs.org/)
+- [SASS with vars switcher](https://sass-lang.com/)
+- [Vercel - Responsible for the deploy](https://vercel.com/)
+
+## Credits
+Deisgn is replicated from [React Pomodoro Timer](https://github.com/Th3Wall/react-pomodoro-clock) by [**Th3Wall**](https://github.com/Th3Wall)  
+Favion and Icon is inspired from [Countdown timer](https://dribbble.com/shots/2719315-Countdown-timer) by [**Nick Velichkin**](https://dribbble.com/velichkin)  
+Recreated by [**Nitesh Kafle**](https://dribbble.com/niteshk32)
 
 ## Build Setup
 
